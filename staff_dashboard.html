@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Staff Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h2>Welcome, {{ username }} (Staff)</h2>
+
+    <p>Admin Panel</p>
+
+    <br>
+
+    <button>View All Students</button>
+    <br><br>
+
+    <button>View All Books</button>
+    <br><br>
+
+    <a href="/createbook"><button>Create Book</button></a>
+    <br><br>
+
+    <a href="/deletebook"><button>Delete Book</button></a>
+    <br><br>
+
+    <button>Send Email</button>
+
+    <br><br>
+
+    <a href="/"><button>Logout</button></a>
+</div>
+
+</body>
+</html>

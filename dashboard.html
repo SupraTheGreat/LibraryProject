@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Welcome, {{ username }}</h1>
+
+    <br>
+
+    <a href="/allbooks"><button>View All Books</button></a>
+    <br><br>
+
+    <button>View Available Books</button>
+    <br><br>
+
+    <button>My Checked Out Books</button>
+    <br><br>
+
+    <button>Checkout Book</button>
+    <br><br>
+
+    <button>Return Book</button>
+
+    <br><br>
+
+    <a href="/"><button>Logout</button></a>
+</div>
+
+</body>
+</html>
