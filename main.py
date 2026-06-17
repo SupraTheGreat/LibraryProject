@@ -1,3 +1,4 @@
+from importlib.resources import contents
 from flask import Flask, jsonify, request, render_template, redirect, url_for
 import sqlite3
 import os
@@ -5,6 +6,7 @@ import smtplib
 from email.message import EmailMessage
 from dotenv import load_dotenv
 import datetime
+import random
 
 load_dotenv()
 
@@ -72,6 +74,7 @@ studentid = 0
 duplicate = False
 login = "none"
 info = []
+otp_storage = {}
 
 app = Flask(__name__)
 
@@ -87,9 +90,41 @@ def dashboard():
 
 @app.route('/staff_dashboard')
 def staff_dashboard():
-    if login != "staff":
-        return "Unauthorized", 401
-    return render_template("staff_dashboard.html", username=info[1])
+
+    conn = sqlite3.connect('books.db')
+    total_books = conn.execute(
+        "SELECT COUNT(*) FROM BOOKS"
+    ).fetchone()[0]
+    conn.close()
+
+    conn = sqlite3.connect('student.db')
+    total_students = conn.execute(
+        "SELECT COUNT(*) FROM STUDENTS"
+    ).fetchone()[0]
+    conn.close()
+
+    conn = sqlite3.connect('student.db')
+    checked_out = conn.execute(
+        "SELECT COUNT(*) FROM STUDENTBOOKS"
+    ).fetchone()[0]
+    conn.close()
+
+    return render_template(
+        "staff_dashboard.html",
+        username=info[1],
+        total_books=total_books,
+        total_students=total_students,
+        checked_out=checked_out
+    )
+
+@app.route('/logout')
+def logout():
+    global login, info
+
+    login = "none"
+    info = []
+
+    return redirect(url_for('home'))
 
 @app.route('/staffsignup', methods=['GET', 'POST'])
 def staffsignup():
@@ -167,6 +202,105 @@ def stafflogin():
 
     return render_template("stafflogin.html"), 200
 
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+
+    global otp_storage
+
+    if request.method == "POST":
+        email = request.form["email"]
+        found = False
+        conn = sqlite3.connect('student.db')
+        cursor = conn.execute(
+            "SELECT email FROM STUDENTS"
+        )
+
+        for row in cursor:
+            if row[0] == email:
+                found = True
+        conn.close()
+
+        if not found:
+            return render_template(
+                "forgot_password.html",
+                message="Email not found."
+            )
+
+        otp = str(random.randint(100000, 999999))
+        otp_storage[email] = otp
+
+        send_email(
+            email,
+            "Password Reset Code",
+            f"Your verification code is: {otp}"
+        )
+
+        return redirect(
+            url_for(
+                "verifyotp",
+                email=email
+            )
+        )
+
+    return render_template("forgot_password.html")
+
+@app.route('/verifyotp/<email>', methods=['GET', 'POST'])
+def verifyotp(email):
+
+    global otp_storage
+
+    if request.method == "POST":
+
+        otp = request.form["otp"]
+
+        if otp_storage.get(email) == otp:
+
+            return redirect(
+                url_for(
+                    "resetpassword",
+                    email=email
+                )
+            )
+
+        return render_template(
+            "verify_otp.html",
+            email=email,
+            message="Incorrect OTP."
+        )
+
+    return render_template(
+        "verify_otp.html",
+        email=email
+    )
+
+@app.route('/resetpassword/<email>', methods=['GET', 'POST'])
+def resetpassword(email):
+
+    global otp_storage
+
+    if request.method == "POST":
+
+        new_password = request.form["password"]
+
+        conn = sqlite3.connect('student.db')
+
+        conn.execute(
+            "UPDATE STUDENTS SET PASSWORD = ? WHERE EMAIL = ?",
+            (new_password, email)
+        )
+
+        conn.commit()
+        conn.close()
+
+        otp_storage.pop(email, None)
+
+        return redirect(url_for("loginstudent"))
+
+    return render_template(
+        "reset_password.html",
+        email=email
+    )
+
 # @app.route('/loginstaff', methods=['POST'])
 # def loginstaff():
 #     global login, info
@@ -214,37 +348,56 @@ def getstaff():
 
 @app.route('/getstudents', methods=['GET'])
 def getstudents():
-    if login == "staff":
-        global list
-        list = []
-        conn = sqlite3.connect('student.db')
-        cursor = conn.execute("SELECT user, password from STUDENTS")
-        for row in cursor:
-            list.append(["Username: " + row[0], "Password: " + row[1]])
-        return jsonify({"data": list}), 200
-    return jsonify({"status": "Permission denied."}), 401
+    global list
+    list = []
+    conn = sqlite3.connect('student.db')
+    cursor = conn.execute("SELECT user, password, email from STUDENTS")
+    for row in cursor:
+        list.append({
+            "user": row[0],
+            "password": row[1],
+            "email": row[2]
+        })
+    return render_template("getstudents.html", students=list), 200
 
-@app.route('/createbook', methods=['POST'])
+@app.route('/getusercheckedout', methods=['GET'])
+def getusercheckedout():
+    global info
+    list = []
+    conn = sqlite3.connect('student.db')
+    cursor = conn.execute("SELECT book_id, student_id, title from STUDENTBOOKS")
+    for row in cursor:
+        if info[0] == row[1]:
+            list.append({
+                "id": row[0],
+                "title": row[2]
+            })
+    return render_template("getusercheckedout.html", books=list), 200
+
+@app.route('/createbook', methods=['GET', 'POST'])
 def createbook():
-    if login == "staff":
-        pass
-    else:
-        return jsonify({'status': 'Permission denied.'}), 401
-    data = request.get_json()
-    conn = sqlite3.connect('books.db')
-    # if True:
-    try:
-        for i in range(int(data.get("copies"))):
-            conn.execute(
-                "INSERT INTO BOOKS (TITLE, AUTHOR, available) VALUES (?, ?, ?)",
-                (data.get("title"), data.get("author"), 1)
-            )
-            conn.commit()
-    except:
-        conn.close()
-        return jsonify({"status": "ERROR: Something went wrong"}), 500
-    conn.close()
-    return jsonify({'status': f'Book successfully created.'}), 200
+    if request.method == "POST":
+        title = request.form["title"]
+        author = request.form["author"]
+        copies = request.form["copies"]
+        if login == "staff":
+            pass
+        else:
+            return render_template("createbook.html", message="Unauthorized request"), 401
+        conn = sqlite3.connect('books.db')
+        # if True:
+        try:
+            for i in range(int(copies)):
+                conn.execute(
+                    "INSERT INTO BOOKS (TITLE, AUTHOR, available) VALUES (?, ?, ?)",
+                    (title, author, 1)
+                )
+                conn.commit()
+        except:
+            conn.close()
+            return render_template("createbook.html", message="Something went wrong"), 500
+        return redirect(url_for("staff_dashboard"))
+    return render_template("createbook.html"), 200
 
 @app.route('/deletebookbytitle/<string:title>', methods=['DELETE'])
 def deletebookbytitle(title):
@@ -282,51 +435,183 @@ def deletebookbyauthor(author):
     conn.close()
     return jsonify({'status': 'Operation complete.'})
 
-@app.route('/checkout', methods=['POST'])
-def checkout():
-    if login == "student":
-        pass
-    else:
-        return jsonify({'status': 'Permission denied.'}), 401
+@app.route('/deletebook', methods=['GET', 'POST'])
+def deletebook():
+    if login != "staff":
+        return "Unauthorized", 401
 
-    global info
-    data = request.get_json()
-    checkout_date = datetime.datetime.now()
-    book_id = 0
-    conn = sqlite3.connect('books.db')
-    cursor = conn.execute("SELECT id, title, author, available from BOOKS")
-    for row in cursor:
-        if row[1] == data.get("title") and row[3] == 1:
-            book_id = row[0]
-    if book_id == 0:
+    if request.method == "POST":
+        book_id = request.form["id"]
+
+        conn = sqlite3.connect('books.db')
+
+        try:
+            conn.execute("DELETE FROM BOOKS WHERE ID = ?", (book_id,))
+            conn.commit()
+        except:
+            conn.close()
+            return render_template(
+                "deletebook.html",
+                message="Error deleting book."
+            )
+
         conn.close()
-        return jsonify({'status': 'ERROR: Book not available for checkout.'}), 412
 
-    conn = sqlite3.connect('student.db')
-    if True:
-    # try:
-        conn.execute(f"INSERT INTO STUDENTBOOKS (BOOK_ID,STUDENT_ID, USER, TITLE, DUE_DATE, USER_EMAIL) \
-                              VALUES ({book_id}, {info[0]}, '{info[1]}', '{data.get('title')}', '{checkout_date + datetime.timedelta(days=14)}', '{info[3]}')")
+        return render_template(
+            "deletebook.html",
+            message="Book deleted successfully."
+        )
+
+    return render_template("deletebook.html")
+
+@app.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+
+    if login != "student":
+        return "Unauthorized", 401
+
+    if request.method == "POST":
+
+        title = request.form["title"]
+
+        checkout_date = datetime.datetime.now()
+
+        book_id = 0
+
+        conn = sqlite3.connect('books.db')
+
+        cursor = conn.execute(
+            "SELECT id, title, available FROM BOOKS"
+        )
+
+        for row in cursor:
+            if row[1] == title and row[2] == 1:
+                book_id = row[0]
+
+        if book_id == 0:
+            conn.close()
+
+            return render_template(
+                "checkout.html",
+                message="Book unavailable."
+            )
+
+        conn.close()
+
+        conn = sqlite3.connect('student.db')
+
+        conn.execute(
+            "INSERT INTO STUDENTBOOKS (BOOK_ID, STUDENT_ID, USER, TITLE, DUE_DATE, USER_EMAIL) VALUES (?, ?, ?, ?, ?, ?)",
+            (
+                book_id,
+                info[0],
+                info[1],
+                title,
+                str(checkout_date + datetime.timedelta(days=14)),
+                info[3]
+            )
+        )
+
         conn.commit()
-    # except:
-    #     conn.close()
-    #     return jsonify({'status': 'ERROR: Book not available for checkout.'}), 412
-    conn.close()
-    conn = sqlite3.connect('books.db')
-    conn.execute(f"UPDATE BOOKS set AVAILABLE = 0 where ID = {book_id}")
-    conn.commit()
-    conn.close()
-    return jsonify({'status': 'Operation complete.'}), 200
+        conn.close()
 
-@app.route('/email', methods=['POST'])
-def email():
-    if login == "staff":
-        pass
-    else:
-        return jsonify({'status': 'Permission denied.'}), 401
+        conn = sqlite3.connect('books.db')
+
+        conn.execute(
+            "UPDATE BOOKS SET AVAILABLE = 0 WHERE ID = ?",
+            (book_id,)
+        )
+
+        conn.commit()
+        conn.close()
+
+        return render_template(
+            "checkout.html",
+            message="Book checked out successfully."
+        )
+
+    return render_template("checkout.html")
+
+@app.route('/returnbook', methods=['GET', 'POST'])
+def returnbook():
+
+    if login != "student":
+        return "Unauthorized", 401
+
+    if request.method == "POST":
+
+        title = request.form["title"]
+
+        book_id = 0
+
+        conn = sqlite3.connect('student.db')
+
+        cursor = conn.execute(
+            "SELECT book_id, title FROM STUDENTBOOKS"
+        )
+
+        for row in cursor:
+            if row[1] == title:
+                book_id = row[0]
+
+        if book_id == 0:
+            conn.close()
+
+            return render_template(
+                "returnbook.html",
+                message="Book not checked out."
+            )
+
+        conn.execute(
+            "DELETE FROM STUDENTBOOKS WHERE BOOK_ID = ?",
+            (book_id,)
+        )
+
+        conn.commit()
+        conn.close()
+
+        conn = sqlite3.connect('books.db')
+
+        conn.execute(
+            "UPDATE BOOKS SET AVAILABLE = 1 WHERE ID = ?",
+            (book_id,)
+        )
+
+        conn.commit()
+        conn.close()
+
+        return render_template(
+            "returnbook.html",
+            message="Book returned successfully."
+        )
+
+    return render_template("returnbook.html")
+
+@app.route('/emaild', methods=['POST'])
+def emaild():
+    if request.method == "POST":
+
+        title = request.form["title"]
     data = request.get_json()
     send_email(data.get("email"), data.get("subject"), data.get("content"))
     return jsonify({'status': f'Email successfully sent to {data.get("email")}'}), 200
+
+@app.route('/sendemail', methods=['GET', 'POST'])
+def sendemail():
+    if login != "staff":
+        return "Unauthorized", 401
+    print("test")
+    if request.method == "POST":
+        emailid = request.form["email"]
+        subject = request.form["subject"]
+        content = request.form["content"]
+        send_email(emailid, subject, content)
+        return render_template(
+            "sendemail.0.html",
+            message="Email sent successfully."
+        )
+
+    return render_template("sendemail.html")
 
 @app.route('/checkin', methods=['DELETE'])
 def checkin():
@@ -365,23 +650,6 @@ def checkin():
     conn.close()
     return jsonify({'status': 'Operation complete.'}), 200
 
-@app.route('/getusercheckedout', methods=['GET'])
-def getusercheckedout():
-    if login == "student":
-        pass
-    else:
-        return jsonify({'status': 'Permission denied.'}), 401
-    global info
-    lst = []
-    conn = sqlite3.connect('student.db')
-    cursor = conn.execute("SELECT book_id, student_id, user, title from STUDENTBOOKS")
-    for row in cursor:
-        if info[0] == row[1]:
-            lst.append([("ID: " + str(row[0])), ("Title: " + row[3])])
-    total = len(lst)
-    lst.insert(0, f"Total Number of Checked Out Books: {str(total)}")
-    return jsonify({"data": lst}), 200
-
 @app.route('/getcheckedout', methods=['GET'])
 def getcheckedout():
     if login == "staff":
@@ -405,19 +673,65 @@ def allbooks():
     conn = sqlite3.connect('books.db')
     cursor = conn.execute("SELECT id, title, author, available from BOOKS")
     for row in cursor:
-        list.append(["ID: " + str(row[0]), "Title: " + row[1], "Author: " + row[2], "Availability: " + str(row[3])])
-    return jsonify({"data": list}), 200
+        availability = "Available" if row[3] == 1 else "Checked Out"
 
-@app.route('/allavailable', methods=['GET'])
-def allavailable():
+        list.append({
+            "id": row[0],
+            "title": row[1],
+            "author": row[2],
+            "availability": availability
+        })
+    return render_template("allbooks.html", books=list)
+
+@app.route('/allbooksstaff', methods=['GET'])
+def allbooksstaff():
     global list
     list = []
     conn = sqlite3.connect('books.db')
     cursor = conn.execute("SELECT id, title, author, available from BOOKS")
     for row in cursor:
+        checkedoutby = "N/A"
+        checkedoutbyid = "N/A"
         if row[3] == 1:
-            list.append(["ID: " + str(row[0]), "Title: " + row[1], "Author: " + row[2]])
-    return jsonify({"data": list}), 200
+            availability = "Available"
+        else:
+            availability = "Checked Out"
+            conn2 = sqlite3.connect('student.db')
+            cursor2 = conn2.execute(f"SELECT student_id, user FROM STUDENTBOOKS WHERE BOOK_ID = {row[0]}")
+            for row2 in cursor2:
+                checkedoutby = row2[1]
+                checkedoutbyid = row2[0]
+
+        list.append({
+            "id": row[0],
+            "title": row[1],
+            "author": row[2],
+            "availability": availability,
+            "checked_out_by": checkedoutby,
+            "checked_out_by_id": checkedoutbyid
+        })
+    return render_template("allbooksstaff.html", books=list)
+
+@app.route('/availablebooks')
+def availablebooks():
+
+    books = []
+
+    conn = sqlite3.connect('books.db')
+    cursor = conn.execute(
+        "SELECT id, title, author FROM BOOKS WHERE AVAILABLE = 1"
+    )
+
+    for row in cursor:
+        books.append({
+            "id": row[0],
+            "title": row[1],
+            "author": row[2]
+        })
+
+    conn.close()
+
+    return render_template("availablebooks.html", books=books)
 
 @app.route('/getbookbyid/<int:id>', methods=['GET'])
 def getbookbyid(id):

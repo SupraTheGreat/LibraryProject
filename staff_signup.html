@@ -1,40 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Staff Sign Up</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Staff Signup</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
 <div class="container">
-    <h2>Staff Sign Up</h2>
+
+    <h2>Staff Signup</h2>
+
+    <p class="subtitle">
+        Sign up to create your administrator account.
+    </p>
 
     {% if message %}
-        <p>{{ message }}</p>
+        <div class="alert">
+            {{ message }}
+        </div>
     {% endif %}
 
     <form method="POST">
-        <label>Username</label><br>
-        <input type="text" name="username" required>
 
-        <br><br>
+        <div class="form-group">
+            <label for="username">Username</label>
 
-        <label>Password</label><br>
-        <input type="password" name="password" required>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Enter your username"
+                required
+            >
+        </div>
 
-        <br><br>
+        <div class="form-group">
+            <label for="password">Password</label>
 
-        <label>Email</label><br>
-        <input type="email" name="email" required>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+            >
+        </div>
 
-        <br><br>
+        <div class="form-group">
+            <label for="password">Email</label>
 
-        <button type="submit">Create Account</button>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+            >
+        </div>
+
+        <div class="button-row">
+            <button type="submit">Signup</button>
+
+            <a href="/">
+                <button type="button" class="secondary-btn">
+                    Back
+                </button>
+            </a>
+        </div>
+
     </form>
 
-    <br>
+    <p class="bottom-text">
+        Already have an account?
+        <a href="{{ url_for('stafflogin') }}">Login</a>
+    </p>
 
-    <a href="/">Back</a>
 </div>
 
 </body>

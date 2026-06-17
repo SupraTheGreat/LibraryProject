@@ -1,33 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Supra's Library</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<div class="container">
-    <h1>Welcome, {{ username }}</h1>
+<div class="dashboard-wrapper">
 
-    <br>
+    <div class="dashboard-header">
 
-    <a href="/allbooks"><button>View All Books</button></a>
-    <br><br>
+        <div>
+            <h1>Welcome, {{ username }}</h1>
+            <p>Student Portal</p>
+        </div>
 
-    <button>View Available Books</button>
-    <br><br>
+        <a href="/logout">
+            <button class="logout-btn">
+                Logout
+            </button>
+        </a>
 
-    <button>My Checked Out Books</button>
-    <br><br>
+    </div>
 
-    <button>Checkout Book</button>
-    <br><br>
+    <div class="student-grid">
 
-    <button>Return Book</button>
+        <a href="/availablebooks" class="dashboard-card">
+            <h2>📚</h2>
+            <h3>Available Books</h3>
+            <p>Browse books ready for checkout.</p>
+        </a>
 
-    <br><br>
+        <a href="/checkout" class="dashboard-card">
+            <h2>📖</h2>
+            <h3>Checkout Book</h3>
+            <p>Borrow a library book.</p>
+        </a>
 
-    <a href="/"><button>Logout</button></a>
+        <a href="/returnbook" class="dashboard-card">
+            <h2>↩️</h2>
+            <h3>Return Book</h3>
+            <p>Return a checked-out book.</p>
+        </a>
+
+        <a href="/getusercheckedout" class="dashboard-card">
+            <h2>📋</h2>
+            <h3>My Books</h3>
+            <p>View books currently borrowed.</p>
+        </a>
+
+    </div>
+
 </div>
 
 </body>

@@ -1,43 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Library System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Supra's Online Library</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<div class="container">
-    <h1>Library System</h1>
-    <p>Welcome. Choose an option:</p>
+    <nav class="navbar">
 
-    <br>
+        <div class="logo">
+            📚 SupraLB
+        </div>
 
-    <h3>Student</h3>
+        <div class="nav-links">
+            <a href="/login">Student Login</a>
+            <a href="/signup">Student Signup</a>
+            <a href="/stafflogin">Staff Login</a>
+            <a href="/staffsignup">Staff Signup</a>
+        </div>
 
-    <a href="/login">
-        <button>Student Login</button>
-    </a>
+    </nav>
 
-    <br><br>
+    <section class="hero">
 
-    <a href="/signup">
-        <button>Student Sign Up</button>
-    </a>
+        <h1>Supra's Online Library</h1>
 
-    <br><br><br>
+        <p>
+            Manage books, track checkouts, and organize library resources
+            through a simple and modern platform.
+        </p>
 
-    <h3>Staff</h3>
+        <div class="hero-buttons">
 
-    <a href="/stafflogin">
-        <button>Staff Login</button>
-    </a>
+            <a href="/login">
+                <button>Student Portal</button>
+            </a>
 
-    <br><br>
+            <a href="/stafflogin">
+                <button>Staff Portal</button>
+            </a>
 
-    <a href="/staffsignup">
-        <button>Staff Sign Up</button>
-    </a>
-</div>
+        </div>
+
+    </section>
+
+    <section class="features">
+
+        <div class="feature-card">
+            <h3>📖 Book Tracking</h3>
+            <p>View availability and manage library inventory.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>👨‍🎓 Student Access</h3>
+            <p>Checkout and return books quickly.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>🛠 Staff Dashboard</h3>
+            <p>Monitor students, books, and checkouts.</p>
+        </div>
+
+    </section>
 
 </body>
 </html>

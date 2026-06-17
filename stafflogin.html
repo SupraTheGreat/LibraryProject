@@ -1,34 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Staff Login</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
 <div class="container">
+
     <h2>Staff Login</h2>
 
+    <p class="subtitle">
+        Sign in to access your administrator account.
+    </p>
+
     {% if message %}
-        <p>{{ message }}</p>
+        <div class="alert">
+            {{ message }}
+        </div>
     {% endif %}
 
     <form method="POST">
-        <label>Username</label><br>
-        <input type="text" name="username" required>
 
-        <br><br>
+        <div class="form-group">
+            <label for="username">Username</label>
 
-        <label>Password</label><br>
-        <input type="password" name="password" required>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Enter your username"
+                required
+            >
+        </div>
 
-        <br><br>
+        <div class="form-group">
+            <label for="password">Password</label>
 
-        <button type="submit">Login</button>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+            >
+        </div>
+
+        <div class="form-links">
+            <a id="forgot" href="{{ url_for('forgot_password') }}">
+                Forgot password?
+            </a>
+        </div>
+
+        <div class="button-row">
+            <button type="submit">Login</button>
+
+            <a href="/">
+                <button type="button" class="secondary-btn">
+                    Back
+                </button>
+            </a>
+        </div>
+
     </form>
 
-    <br>
-    <a href="/">Back</a>
+    <p class="bottom-text">
+        Don't have an account?
+        <a href="{{ url_for('staffsignup') }}">Sign up</a>
+    </p>
+
 </div>
 
 </body>

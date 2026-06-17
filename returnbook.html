@@ -1,38 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register Book</title>
+    <title>Return Book</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
 <div class="container">
-    <h2>Create Book</h2>
+
+    <h2>Return Book</h2>
 
     {% if message %}
         <p>{{ message }}</p>
     {% endif %}
 
     <form method="POST">
-        <label>Title</label><br>
+        <label>Book Title</label><br>
         <input type="text" name="title" required>
 
         <br><br>
 
-        <label>Author</label><br>
-        <input type="text" name="author" required>
+        <button type="submit">Return</button>
 
-        <label>Copies</label><br>
-        <input type="text" name="copies" required>
-
-        <br><br>
-
-        <button type="submit">Create Book</button>
     </form>
 
     <br>
 
-    <a href="/staff_dashboard">Back</a>
+    <a href="/dashboard">
+        <button>Back</button>
+    </a>
+
 </div>
 
 </body>

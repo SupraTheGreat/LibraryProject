@@ -2,34 +2,76 @@
 <html>
 <head>
     <title>Staff Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<div class="container">
-    <h2>Welcome, {{ username }} (Staff)</h2>
+<div class="dashboard-container">
 
-    <p>Admin Panel</p>
+    <div class="topbar">
+        <h2>📚 Supra's Library</h2>
 
-    <br>
+        <a href="/logout">
+            <button class="logout-btn">
+                Logout
+            </button>
+        </a>
+    </div>
 
-    <button>View All Students</button>
-    <br><br>
+    <div class="welcome-section">
+        <h1>Welcome, {{ username }}</h1>
+        <p>Staff Administration Dashboard</p>
+    </div>
 
-    <button>View All Books</button>
-    <br><br>
+    <div class="stats-grid">
 
-    <a href="/createbook"><button>Create Book</button></a>
-    <br><br>
+        <div class="stat-card">
+            <h3>📚 Total Books</h3>
+            <p>{{ total_books }}</p>
+        </div>
 
-    <a href="/deletebook"><button>Delete Book</button></a>
-    <br><br>
+        <div class="stat-card">
+            <h3>👤 Students</h3>
+            <p>{{ total_students }}</p>
+        </div>
 
-    <button>Send Email</button>
+        <div class="stat-card">
+            <h3>📖 Checked Out</h3>
+            <p>{{ checked_out }}</p>
+        </div>
 
-    <br><br>
+    </div>
 
-    <a href="/"><button>Logout</button></a>
+    <div class="actions-grid">
+
+        <a href="/getstudents">
+            <button>👥 View Students</button>
+        </a>
+
+        <a href="/allbooksstaff">
+            <button>📚 View Books</button>
+        </a>
+
+        <a href="/createbook">
+            <button>➕ Create Book</button>
+        </a>
+
+        <a href="/deletebook">
+            <button>🗑️ Delete Book</button>
+        </a>
+
+        <a href="/sendemail">
+            <button>✉️ Send Email</button>
+        </a>
+
+    </div>
+
 </div>
 
 </body>

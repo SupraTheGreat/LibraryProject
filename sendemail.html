@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Email</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Send Email</h2>
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+
+    <form method="POST">
+        <label>Email ID</label><br>
+        <input type="text" name="email" required>
+
+        <br><br>
+
+        <label>Subject</label><br>
+        <input type="text" name="subject" required>
+
+        <br><br>
+
+        <label>Content</label><br>
+        <input type="text" name="content" required>
+
+        <br><br>
+
+        <button type="submit">Send</button>
+    </form>
+
+    <br>
+
+    <a href="/staff_dashboard">
+        <button>Back</button>
+    </a>
+
+</div>
+
+</body>
+</html>
