@@ -1,0 +1,65 @@
+Make a Library Sytem.
+
+1. Registraion
+    - Staff Sign Up
+        - At /signupstaff
+        - Has a staff authentication ID (No duplicates, auto-incremented)
+        - Has username (No duplicates)
+        - Has password
+    - Student Sign Up
+        - At /signup
+        - Has student ID (No duplicates, auto-incremented)
+        - Has username (No duplicates)
+        - Has password
+        - Has books_borrowed
+    - Staff Login
+        - At /loginstaff
+        - Login by staff authentication ID
+    - Student Login
+        - At /login
+        - Login by username and password
+
+
+2. Books
+    - Book Details (multiple copies of the same book are possible)
+        - Has book_ID (No duplicates, auto-incremented)
+        - Has title
+        - Has author
+    - Book Creation
+        - At /create
+        - Can only create books if you're staff, and you provide a valid staff authentication ID
+        - Pass title, author
+    - Book Deletion
+        - At /delete
+        - Can only delete books if you're staff, and you provide a valid staff authentication ID
+        - Pass book_ID
+    - Checkout
+        - At /checkout
+        - Students can only check out 5 books at once
+        - When book is checked out, book_ID is added to student's books_borrowed
+    - Return
+        - At /return
+        - Students can only return books that they HAVE
+        - When book is returned, book_ID is removed from studen's books_borrowed
+
+3. Accessing Data (GET APIs)
+    - Search Book by ID
+        - At /bookbyid
+        - Shows book with provided ID (if no book found, error)
+    - Search Book by Title
+        - At /bookbytitle
+        - Shows book with provided title (if no book found, error)
+    - Search Book by Author
+        - At /bookbyauthor
+        - Shows book with provided author (if no book found, error)
+    - Search All Books
+        - At /allbooks
+        - Shows all available books
+    - Show All Customer Accounts
+        - At /customers
+        - Shows all customer accounts
+        - Can only do this if you're staff, and you provide a valid staff authentication ID
+    - Show All Staff Accounts
+        - At /staff
+        - Shows all staff accoutns
+        - Can only do this if you're staff, and you provide a valid staff authentication ID

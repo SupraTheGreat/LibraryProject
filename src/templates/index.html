@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Supra's Online Library</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            📚 SupraLB
+        </div>
+
+        <div class="nav-links">
+            <a href="/login">Student Login</a>
+            <a href="/signup">Student Signup</a>
+            <a href="/stafflogin">Staff Login</a>
+            <a href="/staffsignup">Staff Signup</a>
+        </div>
+
+    </nav>
+
+    <section class="hero">
+
+        <h1>Supra's Online Library</h1>
+
+        <p>
+            Manage books, track checkouts, and organize library resources
+            through a simple and modern platform.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="/login">
+                <button>Student Portal</button>
+            </a>
+
+            <a href="/stafflogin">
+                <button>Staff Portal</button>
+            </a>
+
+        </div>
+
+    </section>
+
+    <section class="features">
+
+        <div class="feature-card">
+            <h3>📖 Book Tracking</h3>
+            <p>View availability and manage library inventory.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>👨‍🎓 Student Access</h3>
+            <p>Checkout and return books quickly.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>🛠 Staff Dashboard</h3>
+            <p>Monitor students, books, and checkouts.</p>
+        </div>
+
+    </section>
+
+</body>
+</html>

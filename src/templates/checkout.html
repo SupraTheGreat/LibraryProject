@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout Book</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Checkout Book</h2>
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+
+    <form method="POST">
+
+        <label>Book Title</label><br>
+
+        <input type="text" name="title" required>
+
+        <br><br>
+
+        <button type="submit">Checkout</button>
+
+    </form>
+
+    <br>
+
+    <a href="/dashboard">
+        <button>Back</button>
+    </a>
+
+</div>
+
+</body>
+</html>
