@@ -26,4 +26,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/libraryproject:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/libraryproject:latest
