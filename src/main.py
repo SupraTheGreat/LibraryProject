@@ -85,7 +85,7 @@ def home():
 @app.route('/dashboard')
 def dashboard():
     if login != "student":
-        return "Unauthorized", 401
+        return render_template("login.html", message="Unauthorized."), 401
     return render_template("dashboard.html", username=info[1])
 
 @app.route('/staff_dashboard')
@@ -177,8 +177,8 @@ def signup():
             conn.commit()
         except:
             conn.close()
-            return "Username already exists.", 409
-        return "Account successfully created. Please login.", 200
+            return render_template("signup.html", message="Username already exists."), 409
+        return render_template("signup.html", message="Account sucessfully created. Please login."), 200
     return render_template("signup.html")
 
 @app.route('/stafflogin', methods=['GET', 'POST'])
@@ -330,7 +330,7 @@ def loginstudent():
                 info = row
                 return redirect(url_for("dashboard"))
 
-        return "Invalid username or password"
+        return render_template("login.html", message="Invalid username or password."), 401
 
     return render_template("login.html")
 
@@ -468,7 +468,7 @@ def deletebook():
 def checkout():
 
     if login != "student":
-        return "Unauthorized", 401
+        return render_template("login.html", message="Unauthorized."), 401
 
     if request.method == "POST":
 
