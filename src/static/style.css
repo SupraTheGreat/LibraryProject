@@ -732,6 +732,81 @@ form {
     font-size: 0.9rem;
 }
 
+@media (max-width: 600px) {
+
+    /* Top navigation */
+    .navbar {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .logo {
+        margin-right: 0;
+        font-size: 1.3rem;
+    }
+
+    .nav-links {
+        width: 100%;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .nav-links a {
+        font-size: 0.9rem;
+    }
+
+
+    /* Main hero section */
+    .hero {
+        margin: 40px auto;
+        padding: 20px 10px;
+    }
+
+    .hero h1 {
+        font-size: 2.3rem;
+        line-height: 1.15;
+    }
+
+    .hero p {
+        font-size: 1rem;
+        line-height: 1.6;
+        padding: 0 10px;
+    }
+
+
+    /* Login / signup buttons */
+    .hero-buttons {
+        margin-top: 30px;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .hero-buttons button {
+        width: 100%;
+        max-width: 280px;
+        height: 50px;
+    }
+
+
+    /* Feature cards */
+    .features {
+        margin: 50px auto;
+        padding: 0 10px;
+        gap: 15px;
+    }
+
+    .feature-card {
+        width: 100%;
+        max-width: 350px;
+        padding: 22px;
+    }
+
+}
+
 .bottom-text a {
     font-weight: 600;
 }
