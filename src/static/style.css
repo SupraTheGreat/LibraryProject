@@ -188,10 +188,6 @@ button:active,
     transform: translateY(0);
 }
 
-    box-shadow:
-        0 15px 30px rgba(37,99,235,.45);
-}
-
 /* Links */
 
 a {
@@ -811,268 +807,185 @@ form {
     font-weight: 600;
 }
 
+/* =========================================
+HOME PAGE MOBILE FIX
+========================================= */
+
 @media (max-width: 600px) {
 
-    /* Prevent horizontal scrolling */
-    html,
-    body {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-    }
-
-    body {
-        padding: 0;
-        min-height: 100vh;
-    }
-
-    /* =========================
-       NAVBAR
-       ========================= */
-
-    .navbar {
-        position: relative;
-
-        width: 100%;
-        padding: 20px 18px 22px;
-
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        gap: 20px;
-
-        background: rgba(15, 23, 42, 0.92);
-
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-    }
-
-    .logo {
-        margin: 0;
-
-        font-size: 1.35rem;
-
-        text-align: center;
-
-        white-space: nowrap;
-    }
-
-    .nav-links {
-        width: 100%;
-
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-
-        gap: 10px;
-
-        justify-content: center;
-    }
-
-    .nav-links a {
-        display: flex;
-
-        align-items: center;
-        justify-content: center;
-
-        min-height: 42px;
-
-        padding: 8px 10px;
-
-        border-radius: 10px;
-
-        background: rgba(255, 255, 255, 0.04);
-
-        border: 1px solid rgba(255, 255, 255, 0.06);
-
-        font-size: 0.82rem;
-
-        text-align: center;
-
-        transition:
-            background 0.2s ease,
-            border-color 0.2s ease,
-            transform 0.2s ease;
-    }
-
-    .nav-links a:hover {
-        background: rgba(59, 130, 246, 0.12);
-
-        border-color: rgba(96, 165, 250, 0.25);
-
-        transform: translateY(-1px);
-    }
-
-
-    /* =========================
-       HERO
-       ========================= */
-
-    .hero {
-        width: 100%;
-
-        margin: 0;
-
-        padding: 65px 22px 50px;
-
-        text-align: center;
-    }
-
-    .hero h1 {
-        font-size: clamp(2.2rem, 10vw, 3rem);
-
-        line-height: 1.1;
-
-        margin-bottom: 20px;
-    }
-
-    .hero p {
-        width: 100%;
-
-        max-width: 500px;
-
-        margin: 0 auto;
-
-        font-size: 1rem;
-
-        line-height: 1.7;
-
-        color: #94a3b8;
-    }
-
-
-    /* =========================
-       HERO BUTTONS
-       ========================= */
-
-    .hero-buttons {
-        width: 100%;
-
-        margin-top: 35px;
-
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: center;
-
-        gap: 14px;
-    }
-
-    .hero-buttons a {
-        width: 100%;
-
-        max-width: 320px;
-    }
-
-    .hero-buttons button {
-        width: 100%;
-
-        height: 52px;
-
-        min-width: 0;
-
-        padding: 12px 20px;
-
-        border-radius: 14px;
-
-        font-size: 0.95rem;
-    }
-
-
-    /* =========================
-       FEATURE SECTION
-       ========================= */
-
-    .features {
-        width: 100%;
-
-        margin: 0;
-
-        padding: 20px 20px 60px;
-
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: center;
-
-        gap: 16px;
-    }
-
-    .feature-card {
-        width: 100%;
-
-        max-width: 420px;
-
-        padding: 24px 22px;
-
-        border-radius: 18px;
-
-        text-align: center;
-
-        background: rgba(255, 255, 255, 0.04);
-
-        border: 1px solid rgba(255, 255, 255, 0.08);
-
-        box-shadow:
-            0 10px 30px rgba(0, 0, 0, 0.15);
-    }
-
-    .feature-card h3 {
-        font-size: 1.05rem;
-
-        margin-bottom: 10px;
-    }
-
-    .feature-card p {
-        font-size: 0.9rem;
-
-        line-height: 1.6;
-
-        margin-bottom: 0;
-    }
+```
+/* Make sure the page itself fits the phone */
+body {
+    width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+    padding: 0;
 }
 
+/* =========================
+   NAVIGATION BAR
+   ========================= */
+
+.navbar {
+    width: 100%;
+    padding: 18px 16px;
+    gap: 18px;
+}
+
+.logo {
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.nav-links {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.nav-links a {
+    width: 100%;
+    min-width: 0;
+    padding: 10px 6px;
+    font-size: 0.78rem;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* =========================
+   HERO SECTION
+   ========================= */
+
+.hero {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 55px 20px 40px;
+}
+
+.hero h1 {
+    font-size: clamp(2rem, 10vw, 3rem);
+    line-height: 1.1;
+    word-wrap: break-word;
+}
+
+.hero p {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* =========================
+   PORTAL BUTTONS
+   ========================= */
+
+.hero-buttons {
+    width: 100%;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.hero-buttons a {
+    width: 100%;
+    max-width: 300px;
+}
+
+.hero-buttons button {
+    width: 100%;
+    min-width: 0;
+    height: 50px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+}
+
+/* =========================
+   FEATURE CARDS
+   ========================= */
+
+.features {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 20px 18px 50px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.feature-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 22px 20px;
+    text-align: center;
+}
+
+.feature-card h3 {
+    font-size: 1rem;
+}
+
+.feature-card p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+```
+
+}
 
 /* =========================================
-   VERY SMALL PHONES
-   ========================================= */
+VERY SMALL PHONES
+========================================= */
 
 @media (max-width: 380px) {
 
-    .navbar {
-        padding-left: 14px;
-        padding-right: 14px;
-    }
+```
+.navbar {
+    padding-left: 12px;
+    padding-right: 12px;
+}
 
-    .nav-links {
-        gap: 8px;
-    }
+.logo {
+    font-size: 1.15rem;
+}
 
-    .nav-links a {
-        font-size: 0.75rem;
+.nav-links {
+    gap: 6px;
+}
 
-        padding: 7px 5px;
-    }
+.nav-links a {
+    font-size: 0.7rem;
+    padding: 9px 4px;
+}
 
-    .hero {
-        padding-left: 18px;
-        padding-right: 18px;
-    }
+.hero {
+    padding-left: 16px;
+    padding-right: 16px;
+}
 
-    .hero h1 {
-        font-size: 2rem;
-    }
+.hero h1 {
+    font-size: 1.9rem;
+}
 
-    .hero p {
-        font-size: 0.92rem;
-    }
+.hero p {
+    font-size: 0.9rem;
+}
 
-    .features {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
+.hero-buttons a {
+    max-width: 280px;
+}
+
+.features {
+    padding-left: 14px;
+    padding-right: 14px;
+}
+```
+
 }
