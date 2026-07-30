@@ -85,7 +85,7 @@ def home():
 @app.route('/dashboard')
 def dashboard():
     if login != "student":
-        return render_template("login.html", message="Unauthorized."), 401
+        return render_template("login.html", message="Unauthorized.", message_type="alert"), 401
     return render_template("dashboard.html", username=info[1])
 
 @app.route('/staff_dashboard')
@@ -142,7 +142,7 @@ def staffsignup():
             conn.commit()
         except:
             conn.close()
-            return render_template("staff_signup.html", message="Username already exists"), 409
+            return render_template("staff_signup.html", message="Username already exists", message_type="alert"), 409
 
         return redirect(url_for("stafflogin"))
 
@@ -177,8 +177,8 @@ def signup():
             conn.commit()
         except:
             conn.close()
-            return render_template("signup.html", message="Username already exists."), 409
-        return render_template("signup.html", message="Account sucessfully created. Please login."), 200
+            return render_template("signup.html", message="Username already exists.", message_type="alert"), 409
+        return render_template("signup.html", message="Account sucessfully created. Please login.", message_type="success"), 200
     return render_template("signup.html")
 
 @app.route('/stafflogin', methods=['GET', 'POST'])
@@ -198,7 +198,7 @@ def stafflogin():
                 info = row
                 return redirect(url_for("staff_dashboard"))
 
-        return render_template("stafflogin.html", message="Invalid credentials"), 401
+        return render_template("stafflogin.html", message="Invalid credentials", message_type="alert"), 401
 
     return render_template("stafflogin.html"), 200
 
@@ -223,7 +223,8 @@ def forgot_password():
         if not found:
             return render_template(
                 "forgot_password.html",
-                message="Email not found."
+                message="Email not found.",
+                message_type="alert"
             )
 
         otp = str(random.randint(100000, 999999))
@@ -265,7 +266,8 @@ def verifyotp(email):
         return render_template(
             "verify_otp.html",
             email=email,
-            message="Incorrect OTP."
+            message="Incorrect OTP.",
+            message_type="alert"
         )
 
     return render_template(
@@ -330,7 +332,7 @@ def loginstudent():
                 info = row
                 return redirect(url_for("dashboard"))
 
-        return render_template("login.html", message="Invalid username or password."), 401
+        return render_template("login.html", message="Invalid username or password.", message_type="alert"), 401
 
     return render_template("login.html")
 
@@ -383,7 +385,7 @@ def createbook():
         if login == "staff":
             pass
         else:
-            return render_template("createbook.html", message="Unauthorized request"), 401
+            return render_template("createbook.html", message="Unauthorized request", message_type="alert"), 401
         conn = sqlite3.connect('books.db')
         # if True:
         try:
@@ -395,7 +397,7 @@ def createbook():
                 conn.commit()
         except:
             conn.close()
-            return render_template("createbook.html", message="Something went wrong"), 500
+            return render_template("createbook.html", message="Something went wrong", message_type="alert"), 500
         return redirect(url_for("staff_dashboard"))
     return render_template("createbook.html"), 200
 
@@ -452,14 +454,16 @@ def deletebook():
             conn.close()
             return render_template(
                 "deletebook.html",
-                message="Error deleting book."
+                message="Error deleting book.",
+                message_type="alert"
             )
 
         conn.close()
 
         return render_template(
             "deletebook.html",
-            message="Book deleted successfully."
+            message="Book deleted successfully.",
+            message_type="success"
         )
 
     return render_template("deletebook.html")
@@ -468,7 +472,7 @@ def deletebook():
 def checkout():
 
     if login != "student":
-        return render_template("login.html", message="Unauthorized."), 401
+        return render_template("login.html", message="Unauthorized.", message_type="alert"), 401
 
     if request.method == "POST":
 
@@ -493,7 +497,8 @@ def checkout():
 
             return render_template(
                 "checkout.html",
-                message="Book unavailable."
+                message="Book unavailable.",
+                message_type="alert"
             )
 
         conn.close()
@@ -527,7 +532,8 @@ def checkout():
 
         return render_template(
             "checkout.html",
-            message="Book checked out successfully."
+            message="Book checked out successfully.",
+            message_type="success"
         )
 
     return render_template("checkout.html")
@@ -559,7 +565,8 @@ def returnbook():
 
             return render_template(
                 "returnbook.html",
-                message="Book not checked out."
+                message="Book not checked out.",
+                message_type="alert"
             )
 
         conn.execute(
@@ -582,7 +589,8 @@ def returnbook():
 
         return render_template(
             "returnbook.html",
-            message="Book returned successfully."
+            message="Book returned successfully.",
+            message_type="success"
         )
 
     return render_template("returnbook.html")
@@ -608,7 +616,8 @@ def sendemail():
         send_email(emailid, subject, content)
         return render_template(
             "sendemail.0.html",
-            message="Email sent successfully."
+            message="Email sent successfully.",
+            message_type="success"
         )
 
     return render_template("sendemail.html")
