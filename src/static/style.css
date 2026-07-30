@@ -728,6 +728,16 @@ form {
     font-size: 0.9rem;
 }
 
+.bottom-text a {
+    color: #93c5fd;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.bottom-text a:hover {
+    color: white;
+}
+
 @media (max-width: 1000px) {
 
     /* Top navigation */
