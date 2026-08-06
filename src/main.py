@@ -1,5 +1,6 @@
 from importlib.resources import contents
 from flask import Flask, jsonify, request, render_template, redirect, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import os
 import smtplib
@@ -133,11 +134,13 @@ def staffsignup():
         password = request.form["password"]
         email = request.form["email"]
 
+        hashed_password = generate_password_hash(password)
+
         conn = sqlite3.connect("staff.db")
         try:
             conn.execute(
                 "INSERT INTO STAFF (USER, PASSWORD, EMAIL) VALUES (?, ?, ?)",
-                (username, password, email)
+                (username, hashed_password, email)
             )
             conn.commit()
         except:
@@ -168,11 +171,13 @@ def signup():
         password = request.form["password"]
         email = request.form["email"]
 
+        hashed_password = generate_password_hash(password)
+
         conn = sqlite3.connect('student.db')
         try:
             conn.execute(
                 "INSERT INTO STUDENTS (USER, PASSWORD, EMAIL) VALUES (?, ?, ?)",
-                (username, password, email)
+                (username, hashed_password, email)
             )
             conn.commit()
         except:
@@ -193,7 +198,7 @@ def stafflogin():
         cursor = conn.execute("SELECT id, user, password, email FROM STAFF")
 
         for row in cursor:
-            if row[1] == username and row[2] == password:
+            if row[1] == username and check_password_hash(row[2], password):
                 login = "staff"
                 info = row
                 return redirect(url_for("staff_dashboard"))
@@ -327,7 +332,7 @@ def loginstudent():
         cursor = conn.execute("SELECT id, user, password, email FROM STUDENTS")
 
         for row in cursor:
-            if row[1] == username and row[2] == password:
+            if row[1] == username and check_password_hash(row[2], password):
                 login = "student"
                 info = row
                 return redirect(url_for("dashboard"))
