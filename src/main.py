@@ -24,7 +24,7 @@ def send_email(receiver, subject, content):
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
         smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
         smtp.send_message(msg)
-
+#
 # os.remove('staff.db')
 # os.remove('student.db')
 # os.remove('books.db')
@@ -362,7 +362,7 @@ def getstudents():
     for row in cursor:
         list.append({
             "user": row[0],
-            "password": row[1],
+            "password": "hidden",
             "email": row[2]
         })
     return render_template("getstudents.html", students=list), 200
