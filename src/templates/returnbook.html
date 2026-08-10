@@ -11,7 +11,9 @@
     <h2>Return Book</h2>
 
     {% if message %}
-        <p>{{ message }}</p>
+        <div class="{{ message_type }}">
+            {{ message }}
+        </div>
     {% endif %}
 
     <form method="POST">

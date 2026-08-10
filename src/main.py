@@ -147,7 +147,7 @@ def staffsignup():
             conn.close()
             return render_template("staff_signup.html", message="Username already exists", message_type="alert"), 409
 
-        return redirect(url_for("stafflogin"))
+        return render_template("stafflogin.html", message="Account sucessfully created. Please login.", message_type="success")
 
     return render_template("staff_signup.html"), 200
 
@@ -289,11 +289,13 @@ def resetpassword(email):
 
         new_password = request.form["password"]
 
+        hashed_password = generate_password_hash(new_password)
+
         conn = sqlite3.connect('student.db')
 
         conn.execute(
             "UPDATE STUDENTS SET PASSWORD = ? WHERE EMAIL = ?",
-            (new_password, email)
+            (hashed_password, email)
         )
 
         conn.commit()
