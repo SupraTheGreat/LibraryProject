@@ -25,7 +25,7 @@
     </p>
 
     {% if message %}
-        <div class="alert">
+        <div class="{{ message_type }}">
             {{ message }}
         </div>
     {% endif %}
