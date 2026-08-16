@@ -738,12 +738,30 @@ def availablebooks():
         "SELECT id, title, author FROM BOOKS WHERE AVAILABLE = 1"
     )
 
+    # for row in cursor:
+    #     books.append({
+    #         "id": row[0],
+    #         "title": row[1],
+    #         "author": row[2]
+    #     })
+
+    books = []
+
     for row in cursor:
-        books.append({
-            "id": row[0],
-            "title": row[1],
-            "author": row[2]
-        })
+        found = False
+
+        for book in books:
+            if book["title"] == row[1]:
+                book["copies"] += 1
+                found = True
+                break
+
+        if not found:
+            books.append({
+                "title": row[1],
+                "author": row[2],
+                "copies": 1
+            })
 
     conn.close()
 
