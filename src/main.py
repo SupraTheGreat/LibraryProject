@@ -147,7 +147,7 @@ def staffsignup():
             conn.close()
             return render_template("staff_signup.html", message="Username already exists", message_type="alert"), 409
 
-        return render_template("stafflogin.html", message="Account sucessfully created. Please login.", message_type="success")
+        return render_template("stafflogin.html", message="Account successfully created. Please login.", message_type="success")
 
     return render_template("staff_signup.html"), 200
 
@@ -730,8 +730,6 @@ def allbooksstaff():
 
 @app.route('/availablebooks')
 def availablebooks():
-
-    books = []
 
     conn = sqlite3.connect('books.db')
     cursor = conn.execute(
